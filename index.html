@@ -1,7 +1,17 @@
-<form action="/action_page.php">
-  <label for="fname">First name:</label>
-  <input type="text" id="fname" name="fname"><br><br>
-  <label for="lname">Last name:</label>
-  <input type="text" id="lname" name="lname"><br><br>
-  <input type="submit" value="Submit">
-</form>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>IPM LAB1</title>
+  </head>
+  <body>
+    <label for="email">Enter your email:</label>
+	<input type="email" id="email"
+    pattern=".+@sample\.com" size="30" required> <br />
+	<label for="zip">Enter your postal code:</label>
+	<input type="zip" pattern="^\d{2}-\d{3}$"> <br />
+	<label for="nip">Enter your NIP:</label>
+	<input type="nip" pattern="^((\d{3}[- ]\d{3}[- ]\d{2}[- ]\d{2})|(\d{3}[- ]\d{2}[- ]\d{2}[- ]\d{3}))$"> <br />
+	<label for="url">Website:</label>
+	<input type="url" id="homepage" name="homepage"> <br />
+  </body>
+</html>
