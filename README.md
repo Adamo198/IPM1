@@ -2,4 +2,4 @@
 Interfejsy Platform Mobilnych
 
 Link:
-https://adamo198.github.io/ipm1/
+https://adamo198.github.io/IPM1/
