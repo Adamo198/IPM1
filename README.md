@@ -9,3 +9,6 @@ https://adamo198.github.io/IPM1/Zad2/
 
 Link zad3:
 https://adamo198.github.io/IPM1/Zad3/
+
+Link zad3b:
+https://adamo198.github.io/IPM1/Zad3b/
