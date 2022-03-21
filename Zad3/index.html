@@ -206,57 +206,17 @@
         return isInRectangle;
       }
 
-      function isCollision(draggedRectangle, staticRectangle) {
+     function isCollision(draggedRectangle, staticRectangle) {
         if (
           draggedRectangle.x < staticRectangle.x + staticRectangle.width &&
           draggedRectangle.x + draggedRectangle.width > staticRectangle.x &&
           draggedRectangle.y < staticRectangle.y + staticRectangle.height &&
           draggedRectangle.y + draggedRectangle.height > staticRectangle.y
         ) {
-          return true;						
+          //return true;						
         }
 
         return false;
-      }
-
-      function resolveCollision(draggedRectangle, staticRectangle) {
-        // Get center position of draged rectangle
-        draggedRectangleCenterX =
-          (draggedRectangle.x + draggedRectangle.width) / 2;
-        draggedRectangleCenterY =
-          (draggedRectangle.y + draggedRectangle.height) / 2;
-
-        // Get center position of static rectangle
-        staticRectangleCenterX =
-          (staticRectangle.x + staticRectangle.width) / 2;
-        staticRectangleCenterY =
-          (staticRectangle.y + staticRectangle.height) / 2;
-
-        // Get the distance between center points
-        vectorX = draggedRectangleCenterX - staticRectangleCenterX;
-        vectorY = draggedRectangleCenterY - staticRectangleCenterY;
-
-        if (
-          Math.abs(vectorX / staticRectangle.width) >
-          Math.abs(vectorY / staticRectangle.height)
-        ) {
-          // Check
-          if (vectorX < 0) {
-            // Left
-            draggedRectangle.x = staticRectangle.x - draggedRectangle.width;
-          } else {
-            // Right
-            draggedRectangle.x = staticRectangle.x + staticRectangle.width;
-          }
-        } else {
-          if (vectorY < 0) {
-            // Top
-            draggedRectangle.y = staticRectangle.y - draggedRectangle.height;
-          } else {
-            // Down
-            draggedRectangle.y = staticRectangle.y + staticRectangle.height;
-          }
-        }
       }
 
       // Init function
