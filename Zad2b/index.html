@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5" />
+    <title>IPM ZAD2b</title>
+    <style>
+        .container {
+            display: block;
+        }
+
+        .dropzone {}
+        #btnSubmit {
+            border: 2px solid black;
+        }
+        input:valid {
+            border: 2px solid green;
+        }
+        input:invalid {
+            border: 2px solid red;
+        }		
+    </style>
+</head>
+
+<body>
+    <ol id="list" contenteditable="true">
+        <li class="dropzone" id='0' draggable="true">
+		    <label for="email">Enter your email:</label>
+			<input type="email" id="email" name="email" pattern="[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*"
+				placeholder="example@example.com" required>
+			<input type="button" value="X" onclick="removeDummy(0)" /><br><br></li>
+				
+        <li class="dropzone" id='1' draggable="true">
+			<label for="zip">Enter your postal code:</label>
+			<input type="text" id="zip" name="zip" pattern="^\d{2}-\d{3}$" placeholder="12-345" required>
+			<input type="button" value="X" onclick="removeDummy(1)" /><br><br></li>
+		
+        <li class="dropzone" id='2' draggable="true">
+		    <label for="nip">Enter your NIP:</label>
+			<input type="text" id="nip" name="nip" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{2}-[0-9]{2}$"
+				placeholder="123-456-32-18" required>
+			<input type="button" value="X" onclick="removeDummy(2)" /><br><br></li>
+				
+        <li class="dropzone" id='3' draggable="true">
+		    <label for="pid">Enter your personal id:</label>
+			<input type="text" id="pid" name="pid" pattern="^[A-Z]{3}[0-9]{6}$" placeholder="ABC123456" required>
+			<input type="button" value="X" onclick="removeDummy(3)" /><br><br></li>
+			
+        <li class="dropzone" id='4' draggable="true">
+		    <label for="ipv4">Enter your IPv4 address:</label>
+			<input type="text" id="ipv4" name="ipv4" pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$"
+				placeholder="192.168.1.1" required>
+			<input type="button" value="X" onclick="removeDummy(4)" /><br><br></li>
+				
+        <li class="dropzone" id='5' draggable="true">
+		    <label for="www">Website:</label>
+			<input type="url" id="www" name="www" pattern="^(http[s]*://|www\.)?([a-zA-Z0-9-]+\.[0-9a-zA-Z]+)([/]\w)*$"
+				placeholder="www.example.com" required>
+			<input type="button" value="X" onclick="removeDummy(5)" /><br><br></li>
+				
+        <li class="dropzone" id='6' draggable="true">
+		    <label for="path">Path 1:</label>
+			<input type="text" id="path" name="path" pattern="^([A-Z]:\\)(windows|winnt|win|dos|msdos)(\\[a-z]+)?$"
+				placeholder="C:\windows\temp" required>
+			<input type="button" value="X" onclick="removeDummy(6)" /><br><br></li>
+				
+        <li class="dropzone" id='7' draggable="true">
+		    <label for="path2">Path 2:</label>
+			<input type="text" id="path2" name="path2"
+				pattern="^[A-Z]:\\([Ww][Ii][Nn][Dd][Oo][Ww][Ss]|[Ww][Ii][Nn][Nn][Tt]|[Ww][Ii][Nn]|[Dd][Oo][Ss]|[Mm][Ss][Dd][Oo][Ss])(\\[A-z]+)?$"
+				placeholder="C:\WinDowS\temp" required>
+			<input type="button" value="X" onclick="removeDummy(7)" /><br><br></li>
+				
+		<li class="dropzone" id='8' draggable="true">
+		    <label for="etcpath">Etc path:</label>
+			<input type="text" id="etcpath" name="etcpath" pattern="^\/etc\/[A-Za-z]+$" placeholder="/etc/passwd" required>
+			<input type="button" value="X" onclick="removeDummy(8)" /><br><br></li>
+			
+        <li class="dropzone" id='9' draggable="true">
+		    <label for="ipv6">Enter your IPv6 address:</label>
+			<input type="text" id="ipv6" name="ipv6" pattern="^([a-f0-9:]+:+)+[a-f0-9]+$"
+				placeholder="2001:0db1:0:0:0:0:1111:11ab" size="30" required>
+			<input type="button" value="X" onclick="removeDummy(9)" /><br><br></li>
+				
+        <li class="dropzone" id='10' draggable="true">
+		    <label for="phone">Enter your phone number:</label>
+			<input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}"
+				placeholder="123-456-789" required>
+			<input type="button" value="X" onclick="removeDummy(10)" /><br><br></li>
+    </ol>
+    <script>
+        let dragged;
+        let id;
+        let index;
+        let indexDrop;
+        let list;
+		
+		function removeDummy(id) {
+        var elem = document.getElementById(id);
+        elem.parentNode.removeChild(elem);
+        return false;
+		}
+
+        document.addEventListener("dragstart", ({ target }) => {
+            dragged = target;
+            id = target.id;
+            list = target.parentNode.children;
+            for (let i = 0; i < list.length; i += 1) {
+                if (list[i] === dragged) {
+                    index = i;
+                }
+            }
+        });
+
+        document.addEventListener("dragover", (event) => {
+            event.preventDefault();
+        });
+
+        document.addEventListener("drop", ({ target }) => {
+            if (target.className == "dropzone" && target.id !== id) {
+                dragged.remove(dragged);
+                for (let i = 0; i < list.length; i += 1) {
+                    if (list[i] === target) {
+                        indexDrop = i;
+                    }
+                }
+                console.log(index, indexDrop);
+                if (index > indexDrop) {
+                    target.before(dragged);
+                } else {
+                    target.after(dragged);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
