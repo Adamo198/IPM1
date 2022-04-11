@@ -18,3 +18,6 @@ https://adamo198.github.io/IPM1/Zad2b/
 
 Link zad4:
 https://adamo198.github.io/IPM1/Zad4/
+
+Link zad5:
+https://adamo198.github.io/IPM1/Zad5/
