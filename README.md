@@ -33,3 +33,6 @@ https://adamo198.github.io/IPM1/Zad2e/
 
 Link zad2f:
 https://adamo198.github.io/IPM1/Zad2f/
+
+Link zad2g:
+https://adamo198.github.io/IPM1/Zad2g/
