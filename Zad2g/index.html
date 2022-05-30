@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5" />
+    <meta http-equiv="Content-Type" content="text/html; charset = utf-8" />
+    <title>IPM ZAD2g</title>
+    <style>
+        .container {
+            display: block;
+        }
+
+        .dropzone {}
+        #btnSubmit {
+            border: 2px solid black;
+        }
+        input:valid {
+            border: 2px solid green;
+        }
+        input:invalid {
+            border: 2px solid red;
+        }	
+    </style>
+  </head>
+  <body>
+    
+    <form id="addForm" onsubmit="return add(event)">
+      <input id="idInput" name="id" type="number" style="visibility: hidden" />
+      <br />
+      <label for="email">Enter your email:</label>
+      <input type="email" id="email" name="email" pattern="[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*"
+            placeholder="example@example.com" required>
+      <br />
+      <label for="zip">Enter your postal code:</label>
+      <input type="text" id="zip" name="zip" pattern="^\d{2}-\d{3}$" placeholder="12-345" required>
+      <br />
+      <label for="nip">Enter your NIP:</label>
+      <input type="text" id="nip" name="nip" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{2}-[0-9]{2}$"
+          placeholder="123-456-32-18" required>
+      <br />
+      <label for="pid">Enter your personal id:</label>
+      <input type="text" id="pid" name="pid" pattern="^[A-Z]{3}[0-9]{6}$" placeholder="ABC123456" required>
+      <br />
+      <label for="ipv4">Enter your IPv4 address:</label>
+      <input type="text" id="ipv4" name="ipv4" pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$"
+          placeholder="192.168.1.1" required>
+      <br />
+      <label for="www">Website:</label>
+      <input type="url" id="www" name="www" pattern="^(http[s]*://|www\.)?([a-zA-Z0-9-]+\.[0-9a-zA-Z]+)([/]\w)*$"
+          placeholder="http://example.com" required>
+      <br />
+      <label for="1">Path 1:</label>
+      <input type="text" id="path1" name="path1" pattern="^([A-Z]:\\)(windows|winnt|win|dos|msdos)(\\[a-z]+)?$"
+      placeholder="C:\windows\temp" required>
+      <br />
+      <label for="path2">Path 2:</label>
+      <input type="text" id="path2" name="path2"
+      pattern="^[A-Z]:\\([Ww][Ii][Nn][Dd][Oo][Ww][Ss]|[Ww][Ii][Nn][Nn][Tt]|[Ww][Ii][Nn]|[Bb][Dd][Oo][Ss]|[Mm][Ss][Dd][Oo][Ss])(\\[A-z]+)?$"
+          placeholder="C:\WinDowS\temp" required>
+      <br />
+      <label for="etc">Etc path:</label>
+      <input type="text" id="etc" name="etc" pattern="^\/etc\/[A-Za-z]+$" placeholder="/etc/passwd" required>
+      <br />
+      <label for="ipv6">Enter your IPv6 address:</label>
+      <input type="text" id="ipv6" name="ipv6" pattern="^([a-f0-9:]+:+)+[a-f0-9]+$"
+          placeholder="2001:0db1:0:0:0:0:1111:11ab" size="30" required>
+      <br />
+      <label for="phone">Enter your phone number:</label>
+      <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}"
+          placeholder="123-456-789" required>
+      <br />
+
+      <input id="submitBtn" type="submit" value="Add entry" />
+
+    </form>
+
+    <button id="editBtn" onclick="editData(event)" disabled>Edit entry</button>
+    <button id="cancelBtn" onclick="cancelEdit(event)" disabled>Cancel Edit</button>
+    <div id="jsonForm"></div>
+    <br />
+    <br />
+    <button onclick="return insertRandomCell()">Insert Random Cell</button>
+    <br />
+    <br />
+
+    <div id="searchFiled">
+      <input id="searchBar" name="search" type="text" placeholder="Search..." />
+      <button onclick="return search(event)">Search</button>
+    </div>
+    <br />
+    <div id="tableDiv"></div>
+    <br />
+    <script type="text/javascript">
+      //prefixes of implementation that we want to test
+      window.indexedDB =
+        window.indexedDB ||
+        window.mozIndexedDB ||
+        window.webkitIndexedDB ||
+        window.msIndexedDB;
+
+      //prefixes of window.IDB objects
+      window.IDBTransaction =
+        window.IDBTransaction ||
+        window.webkitIDBTransaction ||
+        window.msIDBTransaction;
+      window.IDBKeyRange =
+        window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+
+      if (!window.indexedDB) {
+        window.alert(
+          "Your browser doesn't support a stable version of IndexedDB."
+        );
+      }
+
+      const clientData = [
+        {
+          email: "example@gmail.com",
+          postal: "12-346",
+          nip: "123-456-32-18",
+          id: "ABC125465",
+          ipv4: "192.168.1.1",
+          website: "www.example.com",
+          path1: "C:\\windows\\temp",
+          path2: "C:\\winDowS\\temp",
+          etc: "/etc/passwd",
+          ipv6: "2001:0db1:0:0:0:0:1111:11ab",
+          phoneNumber: "500-500-200"
+        },
+      ];
+
+      const NAMES = [
+        "Jan",
+        "Marcin",
+        "Stefan",
+        "Karol",
+        "Mikolaj",
+        "Franek",
+        "Bartek",
+        "Olek",
+        "Albert",
+        "Adam",
+        "Hubert",
+        "Maria",
+        "Halina"
+      ];
+
+      const NIPS = [
+      "123-456-32-18",
+      "793-416-32-12",
+      "756-423-98-16"
+      ];
+      const PIDS = [
+      "ABC125465",
+      "BFS125465",
+      "FSD185485",
+      "AHF846352",
+      "HTL483725",
+      "LIP746352"
+      ];
+      const IPV4S = [
+      "192.168.1.1",
+      "192.168.10.50"
+      ];
+      const WEBSITES = [
+      "http://example.com",
+      "http://gmail.com",
+      "https://wp.pl"
+      ];
+      const PATH1S = [
+      "C:\\windows\\temp",
+      "D:\\msdos"
+      ];
+      const PATH2S = [
+      "C:\\winDowS\\temp"
+      ];
+      const ETCS = [
+      "/etc/passwd",
+      "/etc/hosts"
+      ];
+      const IPV6S = [
+      "2001:0db1:0:0:0:0:1111:11ab",
+      "4008:0db1:0:0:0:0:1111:21ac"
+      ];
+
+      let db;
+      let request = window.indexedDB.open("newDatabase", 1);
+
+      request.onerror = function (event) {
+        console.log("error: The database is opened failed");
+      };
+
+      request.onsuccess = function (event) {
+        db = request.result;
+        console.log("success: The database " + db + " is opened successfully");
+        drawTable();
+      };
+
+      request.onupgradeneeded = function (event) {
+        var db = event.target.result;
+        var objectStore = db.createObjectStore("client", {
+          autoIncrement: true,
+        });
+
+        objectStore.createIndex("email", "email", { unique: true });
+        objectStore.createIndex("zip", "zip", { unique: false });
+        objectStore.createIndex("nip", "nip", { unique: false });
+        objectStore.createIndex("pid", "pid", { unique: false });
+        objectStore.createIndex("ipv4", "ipv4", { unique: false });
+        objectStore.createIndex("www", "www", { unique: false });
+        objectStore.createIndex("path1", "path1", { unique: true });
+        objectStore.createIndex("path2", "path2", { unique: true });
+        objectStore.createIndex("etc", "etc", { unique: true });
+        objectStore.createIndex("ipv6", "ipv6", { unique: false });
+        objectStore.createIndex("phone", "phone", { unique: false,});
+
+        for (var i in clientData) {
+          objectStore.add(clientData[i]);
+        }
+      };
+
+      function add(event) {
+        event.preventDefault();
+
+        var formElements = document.getElementById("addForm");
+
+        var request = db
+          .transaction(["client"], "readwrite")
+          .objectStore("client")
+          .add({
+            email: formElements[1].value,
+            zip: formElements[2].value,
+            nip: formElements[3].value,
+            pid: formElements[4].value,
+            ipv4: formElements[5].value,
+            www: formElements[6].value,
+            path1: formElements[7].value,
+            path2: formElements[8].value,
+            etc: formElements[9].value,
+            ipv6: formElements[10].value,
+            phone: formElements[11].value,
+          });
+
+        request.onsuccess = function (event) {
+          console.log("Client added");
+          drawTable();
+        };
+
+        request.onerror = function (event) {
+          alert(
+            "Unable to add data\r\ user with that email already exist in your database!"
+          );
+        };
+
+        return false;
+      }
+
+      function search(event) {
+        event.preventDefault();
+
+        let searchInputs = document
+          .getElementById("searchBar")
+          .value.split(" ");
+
+        drawTable(searchInputs);
+      }
+
+      document
+        .getElementById("searchBar")
+        .addEventListener("input", (event) => {
+          drawTable(event.target.value.split(" "));
+        });
+
+      function remove(id) {
+        let request = db
+          .transaction(["client"], "readwrite")
+          .objectStore("client")
+          .delete(id);
+
+        request.onsuccess = function (event) {
+          console.log(`Client ${id} removed...`);
+          drawTable();
+        };
+      }
+
+      function editData(event) {
+        event.preventDefault();
+        let formElements = document.getElementById("addForm");
+
+        console.log(`Editing ${parseInt(formElements[0].value)}`);
+
+        var objectStore = db
+          .transaction(["client"], "readwrite")
+          .objectStore("client");
+
+        var request = objectStore.get(parseInt(formElements[0].value));
+        request.onerror = function (event) {
+          // Handle errors!
+          console.log(
+            "Something went wrong, client with that id does not exits"
+          );
+        };
+        request.onsuccess = function (event) {
+          // Get the old value that we want to update
+          let data = event.target.result;
+
+          let client = {
+            email: formElements[1].value,
+            zip: formElements[2].value,
+            nip: formElements[3].value,
+            pid: formElements[4].value,
+            ipv4: formElements[5].value,
+            www: formElements[6].value,
+            path1: formElements[7].value,
+            path2: formElements[8].value,
+            etc: formElements[9].value,
+            ipv6: formElements[10].value,
+            phone: formElements[11].value,
+          };
+
+          console.log(client);
+
+          // Get the old value that we want to update
+          let requestUpdate = db
+            .transaction(["client"], "readwrite")
+            .objectStore("client")
+            .put(client, parseInt(formElements[0].value));
+
+          requestUpdate.onsuccess = function (event) {
+            console.log("Record updated");
+            drawTable();
+          };
+        };
+      }
+
+      function cancelEdit(event) {
+        event.preventDefault();
+        document.getElementById("editBtn").disabled = true;
+        document.getElementById("cancelBtn").disabled = true;
+        document.getElementById("submitBtn").disabled = false;
+      }
+
+      function fillEditData(id) {
+        document.getElementById("submitBtn").disabled = true;
+        document.getElementById("editBtn").disabled = false;
+        document.getElementById("cancelBtn").disabled = false;
+
+        var objectStore = db
+          .transaction(["client"], "readwrite")
+          .objectStore("client");
+
+        var request = objectStore.get(id);
+        request.onerror = function (event) {
+          // Handle errors!
+          console.log("Something went wrong");
+        };
+        request.onsuccess = function (event) {
+          // Get the old value that we want to update
+          let data = event.target.result;
+
+          document.getElementById("idInput").value = id;
+          document.getElementById("email").value = data.email;
+          document.getElementById("zip").value = data.zip;
+          document.getElementById("nip").value = data.nip;
+          document.getElementById("pid").value = data.pid;
+          document.getElementById("ipv4").value = data.ipv4;
+          document.getElementById("www").value = data.www;
+          document.getElementById("ipv4").value = data.ipv4;
+          document.getElementById("path1").value = data.path1;
+          document.getElementById("path2").value = data.path2;
+          document.getElementById("etc").value = data.etc;
+          document.getElementById("ipv6").value = data.ipv6;
+          document.getElementById("phone").value = data.phone;
+        };
+      }
+
+      function generateTableHead(table, data) {
+        let thead = table.createTHead();
+        let row = thead.insertRow();
+
+        // Create id column
+        let th = document.createElement("th");
+        let text = document.createTextNode("id");
+        th.appendChild(text);
+        row.appendChild(th);
+
+        for (let key of data) {
+          let th = document.createElement("th");
+          let text = document.createTextNode(key);
+          th.appendChild(text);
+          row.appendChild(th);
+        }
+      }
+
+      function generateTable(table, filterItems = []) {
+        let objectStore = db.transaction("client").objectStore("client");
+
+        objectStore.openCursor().onsuccess = function (event) {
+          var cursor = event.target.result;
+
+          if (cursor) {
+            if (filterItems.length > 0 && filterItems[0] !== "") {
+              let exists = false;
+              for (let i = 0; i < filterItems.length; i++) {
+                const element = filterItems[i].toLowerCase();
+                if (element === "") continue;
+                for (objValue of Object.values(cursor.value)) {
+                  if (objValue.toLowerCase().includes(element)) {
+                    exists = true;
+                    break;
+                  }
+                }
+              }
+
+              if (!exists) {
+                cursor.continue();
+                return;
+              }
+            }
+
+            let row = table.insertRow();
+            let cell = row.insertCell();
+            let text = document.createTextNode(cursor.key);
+            cell.appendChild(text);
+            for (const [key, value] of Object.entries(cursor.value)) {
+              let cell = row.insertCell();
+              let text = document.createTextNode(value);
+              cell.appendChild(text);
+            }
+
+            cell = row.insertCell();
+
+            let removeButton = document.createElement("button");
+            removeButton.setAttribute("id", "removeButton" + cursor.key);
+            removeButton.setAttribute("onclick", `remove(${cursor.key})`);
+            removeButton.innerHTML = "remove";
+            cell.appendChild(removeButton);
+
+            let editButton = document.createElement("button");
+            editButton.setAttribute("id", "editButton" + cursor.key);
+            editButton.setAttribute("onclick", `fillEditData(${cursor.key})`);
+            editButton.innerHTML = "edit";
+            cell.appendChild(editButton);
+
+            cursor.continue();
+          } else {
+            console.log("No more data");
+          }
+        };
+      }
+
+      function drawTable(filterItems) {
+        if (document.getElementById("tbody") !== null) {
+          document.querySelector("#tbody").remove();
+        }
+
+        let table = document.createElement("table");
+        table.setAttribute("id", "tbody");
+
+        let data = Object.keys(clientData[0]);
+        generateTable(table, filterItems);
+        generateTableHead(table, data);
+        document.getElementById("tableDiv").appendChild(table);
+      }
+
+      function insertRandomCell() {
+        let formElements = document.getElementById("addForm");
+        
+        formElements[1].value = `${NAMES[Math.floor(Math.random() * NAMES.length)].toLowerCase()}@gmail.com`;
+        formElements[2].value = `${Math.floor(10 + Math.random() * 80)}`
+          + "-" + `${Math.floor(10 + Math.random() * 8)}` + "0";
+        formElements[3].value = NIPS[Math.floor(Math.random() * NIPS.length)];
+        formElements[4].value = PIDS[Math.floor(Math.random() * PIDS.length)];
+        formElements[5].value = IPV4S[Math.floor(Math.random() * IPV4S.length)];
+        formElements[6].value = WEBSITES[Math.floor(Math.random() * WEBSITES.length)];
+        formElements[7].value = PATH1S[Math.floor(Math.random() * PATH1S.length)];
+        formElements[8].value = PATH2S[Math.floor(Math.random() * PATH2S.length)];
+        formElements[9].value = ETCS[Math.floor(Math.random() * ETCS.length)];
+        formElements[10].value = IPV6S[Math.floor(Math.random() * IPV6S.length)];
+        formElements[11].value = `${Math.floor(100 + Math.random() * 700)}`
+          + "-" + `${Math.floor(100 + Math.random() * 700)}`
+          + "-" + `${Math.floor(100 + Math.random() * 700)}`;
+      }
+
+    </script>
+  </body>
+</html>
